@@ -1,0 +1,19 @@
+html
+	body
+		head
+			script(src=' https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+			style
+				#messages { height: 300px; width: 300px; overflow: hidden; border: #ccc solid 1px;}
+				section { margin-left: 20px; }
+			section
+			h1 Chat Viewer #1
+			div#messages
+			
+			script(src='/faye/client.js')
+			script.
+				var client = new Faye.Client('/faye',{
+				timeout: 20
+				});
+				client.subscribe('/channel', function(message) {
+				$('#messages').append('<p>'+message.text+'</p>');
+				})
