@@ -8,23 +8,34 @@ var bayeux = new faye.NodeAdapter({
 var app = express();
 var routes = require('./routes/index');
 var server = http.createServer(app);
+var mogno=require('mongodb');
+var monk = require('monk');
+var db = monk('pulkit:sharva@localhost:27017/ChatServerDB');
 
 bayeux.attach(server);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
+app.set("newBayeux",bayeux);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(function(req,res,next)
+{
+	req.db=db;
+	next();
+});
 app.use('/', routes);
 
-
+/*
 app.post('/message', function(req, res) {
   bayeux.getClient().publish('/channel', {text: req.body.message});
+  console.log("Posting message:"+req.body.message);
   res.send(200);
 });
+*/
+
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -57,4 +68,7 @@ app.use(function(err, req, res, next) {
 });
 
 server.listen(8123);
+module.exports = app;
+
+
 console.log("Server up and listening on port 8123")
