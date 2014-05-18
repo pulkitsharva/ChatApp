@@ -4,11 +4,14 @@ block content
 	body
 		head
 			script(src=' https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-			
+			script(src="/socket.io/socket.io.js")
 		h1= title
 		p Welcome to #{title}
 		button(id='testButton') Chat Client
 		br
+		button(id='testSocket') Test Socket
+		br
+	
 		a(href='/client3') Client 3
 		script.
 			$('#testButton').click(function(){
@@ -30,5 +33,13 @@ block content
 					error: function ( error) {
 						console.log('Error: ' + JSON.stringify(error));
 					},
+				});
+			});
+			$('#testSocket').click(function(){
+				var socket = io.connect('http://localhost');
+				socket.on('news', function (data) {
+				console.log(data);
+				alert();
+				socket.emit('my other event', { my: 'data' });
 				});
 			});

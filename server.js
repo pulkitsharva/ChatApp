@@ -13,7 +13,7 @@ var monk = require('monk');
 var db = monk('pulkit:sharva@localhost:27017/ChatServerDB');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session')
-
+var io = require('socket.io').listen(server);
 bayeux.attach(server);
 
 // view engine setup
@@ -76,6 +76,14 @@ app.use(function(err, req, res, next) {
 
 server.listen(8123);
 module.exports = app;
-
+io.sockets.on('connection', function (socket) {
+	socket.emit('news', { hello: 'world' });
+	socket.on('my other event', function (data) {
+		console.log(data);
+	});
+	socket.on('disconnect', function() {
+      console.log('Got disconnect!');
+	 });
+});
 
 console.log("Server up and listening on port 8123")
