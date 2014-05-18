@@ -11,6 +11,8 @@ var server = http.createServer(app);
 var mogno=require('mongodb');
 var monk = require('monk');
 var db = monk('pulkit:sharva@localhost:27017/ChatServerDB');
+var cookieParser = require('cookie-parser');
+var session      = require('express-session')
 
 bayeux.attach(server);
 
@@ -18,6 +20,9 @@ bayeux.attach(server);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set("newBayeux",bayeux);
+app.use(cookieParser());
+app.use(session({ secret: 'keyboard cat', name: 'sid', cookie: { secure: false }}))
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));

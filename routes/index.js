@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 router.get('/client1', function(req, res) {
-
+	console.log("session:"+req.session.user);
   res.render('client1', { title: 'Express' , value: "Unique_Value"});
 });
 router.get('/client2', function(req, res) {
@@ -40,10 +40,13 @@ router.post('/checkUser', function(req, res) {
 			}
 			else
 			{
+				req.session.user="some value saved";
 				console.log("user name available");
 				res.header("Access-Control-Allow-Origin", "*");
 				res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,    Accept");
 				res.send({"message":"user name available"});
+				console.log(req.session);
+				
 			}
 			if(e)
 			{
