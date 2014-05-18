@@ -54,11 +54,9 @@ res.json({"data":'all good'},200);
 		});
 });
 router.post('/checkUser1', function(req, res) {
-console.log("From request:"+JSON.stringify(req.body));
-res.header("Access-Control-Allow-Origin", "*");
-
-res.send({'data': 'some data is coming up'});
-	
-	
+	console.log("From request:"+JSON.stringify(req.body));
+	res.header("Access-Control-Allow-Origin", "*");
+	res.send({'data': req.body.userName+'  awesome'});
 });
+
 module.exports = router;
