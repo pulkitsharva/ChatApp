@@ -7,68 +7,27 @@ block content
 			
 		h1= title
 		p Welcome to #{title}
-		a(href='' onClick="myFunction1()") Test
-		br
-		a(href='' onClick="myFunction()") Client 1
-		br
-		a(href='/client2') Client 2
+		button(id='testButton') Chat Client
 		br
 		a(href='/client3') Client 3
-		br
-		button(id='testButton') Test Button
-		h2#results
 		script.
-			var myFunction=function(){
-				var user = prompt("Please enter your name","User1");
-				var url = './checkUsers';
-				var message = {userName: user};
-				var dataType = 'json';
-				$.ajax({
-					type: 'GET',
-					'url': url,
-					'data': message,
-					'dataType': dataType,
-					success: function(data){ 
-					$('#results').html(data);
-					console.log("Success:"+data.data);
-					},
-					error: function(errMsg) {
-						console.log("Error:"+JSON.stringify(errMsg));
-						alert();
-					}
-				})
-			}
-			var myFunction1=function(){
-				var url = '/checkUser1';
-				var message = {userName: "Pulkit"};
-				var dataType = 'application/json';
-				$.ajax({
-					url: '/checkUser1',
-					data: message,
-					type: 'GET',
-					dataType: 'jsonp',
-					success: function (data) {
-						var ret = jQuery.parseJSON(data);
-						console.log('Success: '+ret)
-					},
-					error: function (xhr, status, error) {
-						console.log('Error: ' + error.message);
-					},
-				});
-			}
 			$('#testButton').click(function(){
-				var message = {userName: "Pulkit Sharva"};
+				var user = prompt("Please enter your name","User1");
+				var message = {userName: user};
 				var dataType = 'application/json';
 				$.ajax({
-					url: '/checkUser1',
+					url: '/checkUser',
 					data: message,
 					type: 'POST',
 					dataType: 'json',
 					success: function (data) {
-						var ret = JSON.stringify(data);
-						console.log('Success: '+JSON.stringify(data))
+						console.log('Success: '+JSON.stringify(data));
+						if(data.message=="user name available")
+							window.open('/client1','_self');
+						else
+							alert('User name already taken');
 					},
-					error: function (xhr, status, error) {
+					error: function ( error) {
 						console.log('Error: ' + JSON.stringify(error));
 					},
 				});

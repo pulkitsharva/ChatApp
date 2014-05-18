@@ -24,28 +24,26 @@ router.post('/message', function(req, res) {
   bayeux.getClient().publish('/channel', {text: req.body.message});
   res.send(200);
 });
-router.get('/checkUser', function(req, res) {
-
-	console.log("checking user");
+router.post('/checkUser', function(req, res) {
 	var db=req.db;
 	var collection=db.get('userNameCollection');
 		console.log("going to execute query:"+req.body.userName);
-		collection.find({"user":req.body.userName},{},function(e,list)
+		collection.find({"user":{ "$regex" : req.body.userName, "$options" : "-i" }},{},function(e,list)
 		{
-			if(list.length==1)
+			if(list.length>=1)
 			{
 				console.log("user name not available");
 				res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,    Accept");
-res.json({"data":'all good'},200);
+				res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,    Accept");
+				res.send({"message":"user name not available"});
 				
 			}
 			else
 			{
-					console.log("user name available");
-					var message="{'data':'user name available'}";
-					res.statusCode = 200;
-					return res.send('Error 400: Post syntax incorrect.');
+				console.log("user name available");
+				res.header("Access-Control-Allow-Origin", "*");
+				res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type,    Accept");
+				res.send({"message":"user name available"});
 			}
 			if(e)
 			{
@@ -53,10 +51,6 @@ res.json({"data":'all good'},200);
 			}
 		});
 });
-router.post('/checkUser1', function(req, res) {
-	console.log("From request:"+JSON.stringify(req.body));
-	res.header("Access-Control-Allow-Origin", "*");
-	res.send({'data': req.body.userName+'  awesome'});
-});
+
 
 module.exports = router;
