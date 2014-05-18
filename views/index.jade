@@ -7,21 +7,68 @@ block content
 			
 		h1= title
 		p Welcome to #{title}
-		a(href='/client1' onClick="myFunction()") Client 1
+		a(href='' onClick="myFunction1()") Test
+		br
+		a(href='' onClick="myFunction()") Client 1
 		br
 		a(href='/client2') Client 2
 		br
 		a(href='/client3') Client 3
+		h2#results
 		script.
 			var myFunction=function(){
 				var user = prompt("Please enter your name","User1");
-				var url = 'http://localhost:8123/checkUser';
+				var url = './checkUsers';
 				var message = {userName: user};
 				var dataType = 'json';
 				$.ajax({
-					type: 'POST',
+					type: 'GET',
 					'url': url,
 					'data': message,
 					'dataType': dataType,
+					success: function(data){ 
+					$('#results').html(data);
+					console.log("Success:"+data.data);
+					},
+					error: function(errMsg) {
+						console.log("Error:"+JSON.stringify(errMsg));
+						alert();
+					}
+				})
+			}
+			var myFunction1=function(){
+				var url = '/checkUser1';
+				var message = {userName: "Pulkit"};
+				var dataType = 'application/json';
+				$.ajax({
+					url: '/checkUser1',
+					data: message,
+					type: 'GET',
+					dataType: 'jsonp',
+					success: function (data) {
+						var ret = jQuery.parseJSON(data);
+						console.log('Success: '+ret)
+					},
+					error: function (xhr, status, error) {
+						console.log('Error: ' + error.message);
+					},
 				});
-				}
+			}
+			$( document ).ready(function() {
+				console.log( "ready!" );
+				var message = {userName: "Pulkit"};
+				var dataType = 'application/json';
+				$.ajax({
+					url: '/checkUser1',
+					data: message,
+					type: 'POST',
+					dataType: 'json',
+					success: function (data) {
+						var ret = JSON.stringify(data);
+						console.log('Success: '+JSON.stringify(data))
+					},
+					error: function (xhr, status, error) {
+						console.log('Error: ' + JSON.stringify(error));
+					},
+				});
+			});	
